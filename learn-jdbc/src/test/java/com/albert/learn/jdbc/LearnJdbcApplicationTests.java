@@ -1,4 +1,4 @@
-package com.albert.learn.learnJdbc;
+package com.albert.learn.jdbc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
