@@ -27,4 +27,8 @@ public class LearnController {
     public List<UserModel> test() {
         return learnService.test();
     }
+    @GetMapping("/test2")
+    public List<UserModel> test2() {
+        return learnService.test2();
+    }
 }
