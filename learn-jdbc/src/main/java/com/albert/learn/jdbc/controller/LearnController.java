@@ -23,12 +23,13 @@ public class LearnController {
         this.learnService = learnService;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/query-array")
     public List<UserModel> test() {
-        return learnService.test();
+        return learnService.queryByArray();
     }
-    @GetMapping("/test2")
+
+    @GetMapping("/query-map")
     public List<UserModel> test2() {
-        return learnService.test2();
+        return learnService.queryByMap();
     }
 }
