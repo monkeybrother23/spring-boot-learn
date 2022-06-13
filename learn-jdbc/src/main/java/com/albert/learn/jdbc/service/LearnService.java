@@ -1,6 +1,8 @@
 package com.albert.learn.jdbc.service;
 
 import com.albert.learn.jdbc.model.UserModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +17,7 @@ import java.util.Map;
  */
 @Service
 public class LearnService {
+    private static final Logger logger = LoggerFactory.getLogger(LearnService.class);
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -74,6 +77,9 @@ public class LearnService {
                 " SET" +
                 " age = :age" +
                 " WHERE id =:id";
+        if (logger.isDebugEnabled()) {
+            logger.debug("updateByMap param:{}", map);
+        }
         return namedParameterJdbcTemplate.update(sql, map);
     }
 }
