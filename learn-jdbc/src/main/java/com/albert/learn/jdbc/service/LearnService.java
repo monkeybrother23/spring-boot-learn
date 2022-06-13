@@ -55,4 +55,25 @@ public class LearnService {
             return model;
         });
     }
+
+    public int updateByArray(String id, int age) {
+        String sql = "UPDATE" +
+                " develop.demo_user" +
+                " SET" +
+                " age = ?" +
+                " WHERE id =?";
+        return jdbcTemplate.update(sql, age, id);
+    }
+
+    public int updateByMap(String id, int age) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("age", age);
+        String sql = "UPDATE" +
+                " develop.demo_user" +
+                " SET" +
+                " age = :age" +
+                " WHERE id =:id";
+        return namedParameterJdbcTemplate.update(sql, map);
+    }
 }

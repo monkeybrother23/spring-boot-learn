@@ -5,6 +5,7 @@ import com.albert.learn.jdbc.service.LearnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,5 +32,25 @@ public class LearnController {
     @GetMapping("/query-map")
     public List<UserModel> test2() {
         return learnService.queryByMap();
+    }
+
+    @GetMapping("/update-array")
+    public String updateByArray(@RequestParam String id, @RequestParam int age) {
+        int i = learnService.updateByArray(id, age);
+        if (i > 0) {
+            return "SUCCESS";
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @GetMapping("/update-map")
+    public String updateByMap(@RequestParam String id, @RequestParam int age) {
+        int i = learnService.updateByMap(id, age);
+        if (i > 0) {
+            return "SUCCESS";
+        } else {
+            return "FAIL";
+        }
     }
 }
