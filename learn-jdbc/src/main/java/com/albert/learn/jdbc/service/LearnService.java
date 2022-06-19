@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Albert
@@ -31,32 +32,42 @@ public class LearnService {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<UserModel> queryByArray() {
-        String sql = "SELECT id,user_name,age,version_no,create_time,create_by,update_time,update_by" +
-                " FROM develop.demo_user du" +
-                " WHERE user_name =?";
+    public List<UserModel> queryByArray(String userName) {
+        String sql = "SELECT " +
+                " id,user_name,user_age,version_no,create_time,create_by,update_time,update_by" +
+                " FROM learn.demo_user du" +
+                " WHERE user_name = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             UserModel model = new UserModel();
             model.setId(rs.getString("id"));
             model.setName(rs.getString("user_name"));
-            model.setAge(rs.getString("age"));
+            model.setAge(rs.getString("user_age"));
             return model;
-        }, "albert");
+        }, userName);
     }
 
-    public List<UserModel> queryByMap() {
+    public List<UserModel> queryByMap(String id) {
         Map<String, String> map = new HashMap<>();
-        map.put("id", "2");
-        String sql = "SELECT id,user_name,age,version_no,create_time,create_by,update_time,update_by" +
-                " FROM develop.demo_user du" +
+        map.put("id", id);
+        String sql = "SELECT" +
+                " id,user_name,user_age,version_no,create_time,create_by,update_time,update_by" +
+                " FROM learn.demo_user du" +
                 " WHERE id  =:id";
         return namedParameterJdbcTemplate.query(sql, map, (rs, rowNum) -> {
             UserModel model = new UserModel();
             model.setId(rs.getString("id"));
             model.setName(rs.getString("user_name"));
-            model.setAge(rs.getString("age"));
+            model.setAge(rs.getString("user_age"));
             return model;
         });
+    }
+
+    public List<Map<String, Object>> queryForList(String userName) {
+        String sql = "SELECT " +
+                " id,user_name,user_age,version_no,create_time,create_by,update_time,update_by" +
+                " FROM learn.demo_user du" +
+                " WHERE user_name = ?";
+        return jdbcTemplate.queryForList(sql, userName);
     }
 
     public int updateByArray(String id, int age) {
@@ -81,5 +92,38 @@ public class LearnService {
             logger.debug("updateByMap param:{}", map);
         }
         return namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    public int addByArray(UserModel model) {
+        String id = UUID.randomUUID().toString().replace("-", "");
+        String name = model.getName();
+        String age = model.getAge();
+        String sql = "INSERT INTO" +
+                " learn.demo_user (id, user_name, user_age, version_no, create_time, create_by, update_time, update_by)" +
+                " VALUES(?, ?, to_number(?,'999'), 1,now(), 'SYSTEM', now(), 'SYSTEM')";
+        if (logger.isDebugEnabled()) {
+            logger.debug("addByMap id:{} name:{} age:{}", id, name, age);
+        }
+        return jdbcTemplate.update(sql, id, name, age);
+    }
+
+    public int addByMap(UserModel model) {
+        Map<String, Object> map = new HashMap<>();
+        String id = UUID.randomUUID().toString().replace("-", "");
+        map.put("id", id);
+        map.put("name", model.getName());
+        map.put("age", model.getAge());
+        String sql = "INSERT INTO" +
+                " learn.demo_user (id, user_name, user_age, version_no, create_time, create_by, update_time, update_by)" +
+                " VALUES(:id, :name, to_number(:age,'999'), 1,now(), 'SYSTEM', now(), 'SYSTEM')";
+        if (logger.isDebugEnabled()) {
+            logger.debug("addByMap param:{}", map);
+        }
+        return namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    public int deleteByName(String name) {
+        String sql = "DELETE FROM learn.demo_user WHERE user_name=?";
+        return jdbcTemplate.update(sql, name);
     }
 }
