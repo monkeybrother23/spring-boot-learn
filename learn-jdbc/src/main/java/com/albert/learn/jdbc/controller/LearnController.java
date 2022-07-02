@@ -37,6 +37,11 @@ public class LearnController {
         return learnService.queryForList(userName);
     }
 
+    @GetMapping("/query-in")
+    public List<Map<String, Object>> queryByIN() {
+        return learnService.queryByIN();
+    }
+
     @GetMapping("/update-array")
     public String updateByArray(@RequestParam String id, @RequestParam int age) {
         int i = learnService.updateByArray(id, age);

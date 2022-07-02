@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Albert
@@ -70,6 +67,23 @@ public class LearnService {
         return jdbcTemplate.queryForList(sql, userName);
     }
 
+    public List<Map<String, Object>> queryByIN() {
+        Map<String, Object> map = new HashMap<>();
+        List<String> names = new ArrayList<>();
+        names.add("Albert");
+        names.add("albert");
+        names.add("ben");
+        map.put("names", names);
+        String sql = "SELECT " +
+                " id,user_name,user_age,version_no,create_time,create_by,update_time,update_by" +
+                " FROM learn.demo_user du" +
+                " WHERE user_name IN (:names)";
+        if (logger.isDebugEnabled()) {
+            logger.debug("queryByIN param:{}", map);
+        }
+        return namedParameterJdbcTemplate.queryForList(sql, map);
+    }
+
     public int updateByArray(String id, int age) {
         String sql = "UPDATE" +
                 " develop.demo_user" +
@@ -126,4 +140,5 @@ public class LearnService {
         String sql = "DELETE FROM learn.demo_user WHERE user_name=?";
         return jdbcTemplate.update(sql, name);
     }
+
 }
